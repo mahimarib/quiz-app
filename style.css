@@ -145,26 +145,26 @@ li .fa {
     justify-content: center;
 }
 
-li.correct {
+li.selected {
+    background-color: #eee;
+}
+
+li:hover {
+    background-color: #eee;
+}
+
+.choices li.correct {
     color: #155724;
     background-color: #d4edda;
     border-color: #c3e6cb;
     pointer-events: none;
 }
 
-li.wrong {
+.choices li.wrong {
     color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;
     pointer-events: none;
-}
-
-li.selected {
-    background-color: #eee;
-}
-
-.choices li:hover {
-    background-color: #eee;
 }
 
 footer {
@@ -246,4 +246,11 @@ h1.score {
 .result .container p {
     font-size: 1.2em;
     color: #555;
+}
+
+@media (max-width: 400px) {
+    main {
+        font-size: 14px;
+        align-items: flex-start;
+    }
 }
