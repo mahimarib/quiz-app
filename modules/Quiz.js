@@ -1,18 +1,17 @@
 import questions from './questions.js';
-import updateQuestion from './updateQuestion.js';
 
 export default function Quiz() {
     const questionsArr = questions;
+    let button = document.querySelector('button');
     let topCard = document.querySelector('.card.top');
     let bottomCard = document.querySelector('.card.bottom');
-    const button = document.querySelector('button');
     let topQuestion, bottomQuestion;
-    let index;
+    let index, score;
 
     const checkHTML = '<i class="fa fa-check-circle" aria-hidden="true"></i>';
     const wrongHTML = '<i class="fa fa-times-circle" aria-hidden="true"></i>';
 
-    const getChoices = cardElem => Array.from(cardElem.querySelectorAll('li'));
+    const getChoices = card => Array.from(card.querySelectorAll('li'));
 
     const markCorrect = choice => {
         choice.classList.add('correct');
@@ -28,11 +27,34 @@ export default function Quiz() {
         getChoices(topCard).indexOf(choice) == topQuestion.correctIndex;
 
     const markChoices = clickedChoice => {
-        if (isCorrect(clickedChoice)) markCorrect(clickedChoice);
-        else {
+        if (isCorrect(clickedChoice)) {
+            markCorrect(clickedChoice);
+            ++score;
+        } else {
             markWrong(clickedChoice);
             markCorrect(getChoices(topCard)[topQuestion.correctIndex]);
         }
+    };
+
+    const updateCard = (card, questionObj) => {
+        const { question, choices } = questionObj;
+        card.querySelector('h1').innerHTML = question;
+        card.querySelectorAll('ul li').forEach(
+            (li, i) => (li.innerHTML = choices[i])
+        );
+    };
+
+    const updateScore = () => {
+        document.getElementById('percent');
+        const arcLength = 2 * Math.PI * 45 * (score / questions.length);
+        percent.style.strokeDasharray = `${arcLength} 600`;
+        document.querySelector('svg text').textContent = `${(
+            (score / questions.length) *
+            100
+        ).toFixed(0)}%`;
+        bottomCard.querySelector(
+            'p'
+        ).textContent = `You got ${score} out of ${questions.length} correct.`;
     };
 
     const swapCards = () => {
@@ -40,6 +62,7 @@ export default function Quiz() {
         topCard.classList.add('bottom');
         bottomCard.classList.add('top');
         bottomCard.classList.remove('bottom');
+        if (bottomCard.classList.contains('result')) updateScore();
         [topCard, bottomCard] = [bottomCard, topCard];
         [topQuestion, bottomQuestion] = [bottomQuestion, topQuestion];
         updateBottomCard();
@@ -47,13 +70,17 @@ export default function Quiz() {
     };
 
     const updateBottomCard = () => {
+        if (topCard.classList.contains('result')) return;
         index++;
-        if (index > questionsArr.length - 1) return;
+        if (index > questionsArr.length - 1) {
+            showScore();
+            return;
+        }
         bottomQuestion = questionsArr[index];
-        getChoices(bottomCard).forEach(e =>
-            e.classList.remove('wrong', 'correct')
+        getChoices(bottomCard).forEach(li =>
+            li.classList.remove('wrong', 'correct')
         );
-        updateQuestion(bottomCard, questionsArr[index]);
+        updateCard(bottomCard, questionsArr[index]);
     };
 
     const buttonClick = () => {
@@ -69,13 +96,32 @@ export default function Quiz() {
         topCard.removeEventListener('click', choiceClick);
     };
 
+    const showScore = () => {
+        bottomCard.classList.add('result');
+        const percent = (score / questions.length) * 100;
+        const html = `
+        <h1 class="score">Your Score:</h1>
+        <svg viewBox="0 0 100 100">
+            <g transform="translate(50, 50)">
+                <circle id="full" cx="0" cy="0" r="45" fill="none" stroke="currentColor" ></circle>
+                <circle id="percent" cx="0" cy="0" r="45" fill="none" stroke="currentColor"></circle>
+                <text text-anchor="middle" fill="currentColor" dominant-baseline="central">
+                </text>
+            </g>
+        </svg>
+        <p></p>
+        `;
+        bottomCard.querySelector('.container').innerHTML = html;
+    };
+
     this.start = () => {
         topQuestion = questionsArr[0];
         bottomQuestion = questionsArr[1];
         index = 1;
-        updateQuestion(topCard, topQuestion);
-        updateQuestion(bottomCard, bottomQuestion);
-        topCard.addEventListener('click', choiceClick);
+        score = 0;
+        updateCard(topCard, topQuestion);
+        updateCard(bottomCard, bottomQuestion);
         button.addEventListener('click', buttonClick);
+        topCard.addEventListener('click', choiceClick);
     };
 }

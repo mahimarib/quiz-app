@@ -16,7 +16,7 @@ const questions = [
     },
     {
         question: 'Which of these tools ensure code quality?',
-        choices: ['Anuglar', 'ESLint', 'React', 'jQuery'],
+        choices: ['Angular', 'ESLint', 'React', 'jQuery'],
         correctIndex: 1,
     },
     {
@@ -41,11 +41,11 @@ const questions = [
             'Which of the following is used to comment out a single line in JavaScript?',
         choices: [
             '<code>// This is a comment</code',
-            '<code>< !-- This is a comment -- ></code>',
+            '<code># This is a comment</code>',
             '<code>/* This is a comment /</code',
             '<code>/* This is a comment */</code',
         ],
-        correctIndex: 3,
+        correctIndex: 0,
     },
     {
         question:
