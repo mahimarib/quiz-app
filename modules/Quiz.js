@@ -36,10 +36,10 @@ export default function Quiz() {
     const isCorrect = choice =>
         getChoices(topCard).indexOf(choice) == topQuestion.correctIndex;
 
-    const resetChoices = (card, choices) =>
+    const resetChoices = card =>
         card.querySelectorAll('ul li').forEach((li, i) => {
             li.classList.remove('correct', 'wrong');
-            li.innerHTML = choices[i];
+            li.innerHTML = '';
         });
 
     const markChoices = clickedChoice => {
@@ -53,9 +53,10 @@ export default function Quiz() {
     };
 
     const populateCard = (card, questionObj) => {
+        resetChoices(card);
         const { question, choices } = questionObj;
         card.querySelector('h1').innerHTML = question;
-        resetChoices(card, choices);
+        getChoices(card).forEach((li, i) => (li.textContent = choices[i]));
     };
 
     const swap = () => {
