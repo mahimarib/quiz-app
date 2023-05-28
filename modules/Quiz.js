@@ -37,7 +37,7 @@ export default function Quiz() {
         getChoices(topCard).indexOf(choice) == topQuestion.correctIndex;
 
     const resetChoices = card =>
-        card.querySelectorAll('ul li').forEach((li, i) => {
+        card.querySelectorAll('ul li').forEach(li => {
             li.classList.remove('correct', 'wrong');
             li.innerHTML = '';
         });
@@ -56,7 +56,7 @@ export default function Quiz() {
         resetChoices(card);
         const { question, choices } = questionObj;
         card.querySelector('h1').innerHTML = question;
-        getChoices(card).forEach((li, i) => (li.textContent = choices[i]));
+        getChoices(card).forEach((li, i) => (li.innerHTML = choices[i]));
     };
 
     const swap = () => {
