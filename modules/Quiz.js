@@ -45,7 +45,7 @@ export default function Quiz() {
     const markChoices = clickedChoice => {
         if (isCorrect(clickedChoice)) {
             markCorrect(clickedChoice);
-            ++score;
+            score++;
         } else {
             markWrong(clickedChoice);
             markCorrect(getChoices(topCard)[topQuestion.correctIndex]);
